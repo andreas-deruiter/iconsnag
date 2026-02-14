@@ -3,8 +3,9 @@
 /**
  * Builds the search index for Microsoft Fluent UI System Icons.
  *
- * Uses the font JSON manifest to discover all icons, then deduplicates
- * by icon name (keeping the best available size, preferring 24px).
+ * Uses the font JSON manifest to discover all icons, then fetches the
+ * actual directory listing from the repo to get correct folder names
+ * (since folder casing doesn't always match simple title-case rules).
  *
  * Output: public/data/fluent-icons-index.json
  */
@@ -21,6 +22,7 @@ const BRANCH = 'main'
 const OUTPUT = path.join(__dirname, '..', 'public', 'data', 'fluent-icons-index.json')
 const REGULAR_JSON_URL = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/fonts/FluentSystemIcons-Regular.json`
 const FILLED_JSON_URL = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/fonts/FluentSystemIcons-Filled.json`
+const ASSETS_TREE_URL = `https://api.github.com/repos/${REPO}/git/trees/${BRANCH}:assets`
 
 async function fetchJSON(url) {
   const res = await fetch(url)
@@ -34,24 +36,27 @@ function toDisplayName(snakeName) {
     .replace(/\b\w/g, c => c.toUpperCase())
 }
 
-function toFolderName(snakeName) {
-  // Folder names are Title Case with spaces: "arrow_left" -> "Arrow Left"
-  return snakeName
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase())
-}
-
 async function main() {
   console.log('Building Fluent UI System Icons search index...\n')
 
-  console.log('Fetching font manifests...')
-  const [regularData, filledData] = await Promise.all([
+  console.log('Fetching font manifests and directory listing...')
+  const [regularData, filledData, treeData] = await Promise.all([
     fetchJSON(REGULAR_JSON_URL),
     fetchJSON(FILLED_JSON_URL),
+    fetchJSON(ASSETS_TREE_URL),
   ])
 
+  // Build a map from snake_case name to actual folder name
+  // e.g. "wifi_1" -> "WiFi 1", "arrow_left" -> "Arrow Left"
+  const folderMap = {}
+  for (const entry of treeData.tree) {
+    if (entry.type !== 'tree') continue
+    const snakeName = entry.path.toLowerCase().replace(/\s+/g, '_')
+    folderMap[snakeName] = entry.path
+  }
+  console.log(`Found ${Object.keys(folderMap).length} asset folders.`)
+
   // Parse manifest keys like "ic_fluent_arrow_left_24_regular"
-  // Extract: name, size, style
   function parseKey(key) {
     const match = key.match(/^ic_fluent_(.+)_(\d+)_(regular|filled)$/)
     if (!match) return null
@@ -82,7 +87,7 @@ async function main() {
   }
 
   const names = Object.keys(iconMap)
-  console.log(`Found ${names.length} unique icons.\n`)
+  console.log(`Found ${names.length} unique icons in manifests.`)
 
   // Prefer 24px, then 20px, then largest available
   function bestSize(sizes) {
@@ -91,7 +96,16 @@ async function main() {
     return Math.max(...sizes)
   }
 
-  const icons = names.map(name => {
+  const icons = []
+  let skipped = 0
+
+  for (const name of names) {
+    const realFolder = folderMap[name]
+    if (!realFolder) {
+      skipped++
+      continue
+    }
+
     const entry = iconMap[name]
     const size = bestSize(entry.sizes)
     const styles = [...entry.styles].sort()
@@ -100,7 +114,7 @@ async function main() {
       id: name,
       name: toDisplayName(name),
       fileName: name,
-      folderName: toFolderName(name),
+      folderName: realFolder,
       preferredSize: size,
       group: 'Fluent Icons',
       keywords: name.split('_').filter(w => w.length > 0),
@@ -109,8 +123,10 @@ async function main() {
       source: 'fluent-icons',
     }
     icon.tags = assignTags(icon)
-    return icon
-  })
+    icons.push(icon)
+  }
+
+  console.log(`Skipped ${skipped} icons without matching folders.\n`)
 
   icons.sort((a, b) => a.name.localeCompare(b.name))
 
