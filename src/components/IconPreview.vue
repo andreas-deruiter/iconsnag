@@ -90,7 +90,14 @@
           >
             {{ sourceInfo.name }}
           </a>
-          <span class="ml-1 text-gray-400">— License: {{ sourceInfo.license }}</span>
+          <span class="ml-1 text-gray-400">—
+            <a
+              :href="sourceInfo.licenseUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-gray-600 hover:underline"
+            >License: {{ sourceInfo.license }}</a>
+          </span>
         </p>
       </div>
 

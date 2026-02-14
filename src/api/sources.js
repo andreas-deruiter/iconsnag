@@ -15,6 +15,7 @@ const sources = {
     indexUrl: '/data/fluent-emoji-index.json',
     repoUrl: 'https://github.com/microsoft/fluentui-emoji',
     license: 'MIT',
+    licenseUrl: 'https://github.com/microsoft/fluentui-emoji/blob/main/LICENSE',
     author: 'Microsoft',
 
     getFileUrl(baseUrl, icon, style = 'Color', skinTone = 'Default') {
@@ -49,6 +50,7 @@ const sources = {
     indexUrl: '/data/material-symbols-index.json',
     repoUrl: 'https://github.com/google/material-design-icons',
     license: 'Apache 2.0',
+    licenseUrl: 'https://github.com/google/material-design-icons/blob/master/LICENSE',
     author: 'Google',
 
     getFileUrl(baseUrl, icon, style = 'Outlined') {
@@ -67,6 +69,7 @@ const sources = {
     indexUrl: '/data/noto-emoji-index.json',
     repoUrl: 'https://github.com/googlefonts/noto-emoji',
     license: 'Apache 2.0',
+    licenseUrl: 'https://github.com/googlefonts/noto-emoji/blob/main/LICENSE',
     author: 'Google',
 
     getFileUrl(baseUrl, icon) {
@@ -84,6 +87,7 @@ const sources = {
     indexUrl: '/data/tabler-icons-index.json',
     repoUrl: 'https://github.com/tabler/tabler-icons',
     license: 'MIT',
+    licenseUrl: 'https://github.com/tabler/tabler-icons/blob/main/LICENSE',
     author: 'Tabler',
 
     getFileUrl(baseUrl, icon, style = 'Outline') {
@@ -102,6 +106,7 @@ const sources = {
     indexUrl: '/data/fluent-icons-index.json',
     repoUrl: 'https://github.com/microsoft/fluentui-system-icons',
     license: 'MIT',
+    licenseUrl: 'https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE',
     author: 'Microsoft',
 
     getFileUrl(baseUrl, icon, style = 'Regular') {
@@ -122,6 +127,7 @@ const sources = {
     indexUrl: '/data/lucide-index.json',
     repoUrl: 'https://github.com/lucide-icons/lucide',
     license: 'ISC',
+    licenseUrl: 'https://github.com/lucide-icons/lucide/blob/main/LICENSE',
     author: 'Lucide',
 
     getFileUrl(baseUrl, icon) {
@@ -139,6 +145,7 @@ const sources = {
     indexUrl: '/data/phosphor-index.json',
     repoUrl: 'https://github.com/phosphor-icons/core',
     license: 'MIT',
+    licenseUrl: 'https://github.com/phosphor-icons/core/blob/main/LICENSE',
     author: 'Phosphor',
 
     getFileUrl(baseUrl, icon, style = 'Regular') {
@@ -161,6 +168,7 @@ const sources = {
     indexUrl: '/data/bootstrap-icons-index.json',
     repoUrl: 'https://github.com/twbs/icons',
     license: 'MIT',
+    licenseUrl: 'https://github.com/twbs/icons/blob/main/LICENSE',
     author: 'Bootstrap',
 
     getFileUrl(baseUrl, icon, style = 'Outline') {
