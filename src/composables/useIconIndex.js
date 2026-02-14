@@ -20,7 +20,8 @@ export function useIconIndex() {
 
       const results = await Promise.allSettled(
         entries.map(async ([id, source]) => {
-          const res = await fetch(source.indexUrl)
+          const url = import.meta.env.BASE_URL + source.indexUrl.replace(/^\//, '')
+          const res = await fetch(url)
           if (!res.ok) throw new Error(`Failed to load ${id}: ${res.status}`)
           return { id, data: await res.json() }
         })
