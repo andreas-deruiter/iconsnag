@@ -56,15 +56,8 @@
       <!-- Main content -->
       <template v-else>
         <!-- Search + Source filter -->
-        <div class="mb-4">
-          <SearchBar v-model="query" :total="total" />
-        </div>
-        <div class="mb-4">
-          <SourceFilter v-model="selectedSource" />
-        </div>
-
-        <!-- Color type filter -->
-        <div class="mb-6 flex items-center justify-center">
+        <div class="mb-4 flex items-center justify-center gap-2">
+          <SearchBar v-model="query" :total="total" class="flex-1" />
           <div class="inline-flex rounded-full bg-gray-100 p-1">
             <button
               v-for="opt in colorTypeOptions"
@@ -78,10 +71,14 @@
                   : 'text-gray-400 hover:text-gray-600'
               ]"
             >
-              <!-- All: two overlapping circles -->
+              <!-- All: circle with colored dots on left, solid dark on right -->
               <svg v-if="opt.value === ''" class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="none">
-                <circle cx="8" cy="10" r="6" fill="#6366f1" opacity="0.7" />
-                <circle cx="12" cy="10" r="6" fill="currentColor" opacity="0.7" />
+                <path d="M10 2a8 8 0 0 1 0 16z" fill="#374151" />
+                <path d="M10 2a8 8 0 0 0 0 16z" fill="white" />
+                <circle cx="10" cy="10" r="8" stroke="#d1d5db" stroke-width="0.75" />
+                <circle cx="7" cy="7" r="1.5" fill="#ef4444" />
+                <circle cx="5" cy="11" r="1.5" fill="#3b82f6" />
+                <circle cx="9" cy="11" r="1.5" fill="#22c55e" />
               </svg>
               <!-- Color: palette -->
               <svg v-else-if="opt.value === 'color'" class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="none">
@@ -97,6 +94,9 @@
               </svg>
             </button>
           </div>
+        </div>
+        <div class="mb-6">
+          <SourceFilter v-model="selectedSource" />
         </div>
 
         <!-- Mobile tag selector -->
