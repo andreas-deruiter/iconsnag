@@ -1,6 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import { useIconIndex } from './useIconIndex.js'
 import { getSourceColorType } from '../api/sources.js'
+import { scoreIcon } from '@iconsnag/shared/search'
 
 export function useSearch() {
   const { icons } = useIconIndex()
@@ -11,33 +12,6 @@ export function useSearch() {
   const selectedColorType = ref('')
   const page = ref(1)
   const pageSize = 80
-
-  function scoreIcon(icon, q) {
-    const lower = q.toLowerCase()
-    let score = 0
-
-    const nameLower = icon.name.toLowerCase()
-    if (nameLower === lower) score += 200
-    else if (nameLower.startsWith(lower)) score += 100
-    else if (nameLower.includes(lower)) score += 50
-
-    if (icon.keywords) {
-      for (const kw of icon.keywords) {
-        const kwLower = kw.toLowerCase()
-        if (kwLower === lower) score += 80
-        else if (kwLower.startsWith(lower)) score += 30
-        else if (kwLower.includes(lower)) score += 10
-      }
-    }
-
-    if (icon.tts && icon.tts.toLowerCase().includes(lower)) {
-      score += 20
-    }
-
-    if (icon.glyph === q) score += 200
-
-    return score
-  }
 
   // Icons filtered by source and color type (used by TagsSidebar for counts)
   const sourceFilteredIcons = computed(() => {

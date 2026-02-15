@@ -1,0 +1,90 @@
+{
+  "name": "iconsnag",
+  "displayName": "IconSnag",
+  "description": "Search and insert 21,000+ icons from 8 open-source collections directly in VS Code",
+  "version": "0.1.0",
+  "publisher": "iconsnag",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "iconsnag.open",
+        "title": "IconSnag: Search Icons"
+      },
+      {
+        "command": "iconsnag.insertRecent",
+        "title": "IconSnag: Insert Recent Icon"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "iconsnag.open",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i"
+      }
+    ],
+    "configuration": {
+      "title": "IconSnag",
+      "properties": {
+        "iconsnag.defaultAction": {
+          "type": "string",
+          "default": "insertSvg",
+          "enum": [
+            "insertSvg",
+            "copySvg",
+            "insertImg"
+          ],
+          "enumDescriptions": [
+            "Insert SVG markup at cursor",
+            "Copy SVG markup to clipboard",
+            "Insert <img> tag at cursor"
+          ],
+          "description": "Default action when clicking an icon"
+        },
+        "iconsnag.defaultStyle": {
+          "type": "string",
+          "default": "",
+          "description": "Preferred style variant (empty = use source default)"
+        },
+        "iconsnag.svgSize": {
+          "type": "number",
+          "default": 24,
+          "description": "Default width/height attributes added to inserted SVGs"
+        },
+        "iconsnag.imgSize": {
+          "type": "number",
+          "default": 24,
+          "description": "Default width/height for <img> tags"
+        },
+        "iconsnag.recentCount": {
+          "type": "number",
+          "default": 20,
+          "description": "Number of recent icons to remember"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js && npm run build:webview",
+    "build:extension": "node esbuild.js",
+    "build:webview": "cd webview-ui && npx vite build",
+    "watch": "node esbuild.js --watch",
+    "dev:webview": "cd webview-ui && npx vite build --watch",
+    "package": "npx @vscode/vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.2",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.3"
+  }
+}

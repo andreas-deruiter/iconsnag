@@ -26,7 +26,7 @@ const sources = {
       const encodedStyle = encodeURIComponent(style)
 
       if (icon.skinTones && skinTone !== 'Default') {
-        const toneLower = skinTone.toLowerCase().replace(/-/g, '_')
+        const toneLower = skinTone.toLowerCase()
         const encodedTone = encodeURIComponent(skinTone)
         const fileName = `${icon.fileName}_${styleLower}_${toneLower}.${ext}`
         return `${baseUrl}/${encodedName}/${encodedTone}/${encodedStyle}/${fileName}`
@@ -56,7 +56,6 @@ const sources = {
     colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Outlined') {
-      // {base}/{name}/{variant}/{name}_24px.svg
       const variant = VARIANT_MAP[style] || VARIANT_MAP['Outlined']
       return `${baseUrl}/${icon.fileName}/${variant}/${icon.fileName}_24px.svg`
     },
@@ -76,7 +75,6 @@ const sources = {
     colorType: 'color',
 
     getFileUrl(baseUrl, icon) {
-      // {base}/{fileName}  (fileName already includes the full path like emoji_u1f600.svg)
       return `${baseUrl}/${icon.fileName}`
     },
 
@@ -95,7 +93,6 @@ const sources = {
     colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Outline') {
-      // {base}/{style}/{name}.svg
       const dir = style.toLowerCase()
       return `${baseUrl}/${dir}/${icon.fileName}.svg`
     },
@@ -115,7 +112,6 @@ const sources = {
     colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Regular') {
-      // {base}/{Folder Name}/SVG/ic_fluent_{snake}_{size}_{style}.svg
       const folder = encodeURIComponent(icon.folderName)
       const styleLower = style.toLowerCase()
       const size = icon.preferredSize || 24
@@ -137,7 +133,6 @@ const sources = {
     colorType: 'mono',
 
     getFileUrl(baseUrl, icon) {
-      // {base}/{name}.svg
       return `${baseUrl}/${icon.fileName}.svg`
     },
 
@@ -156,8 +151,6 @@ const sources = {
     colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Regular') {
-      // {base}/{weight}/{name}.svg for regular
-      // {base}/{weight}/{name}-{weight}.svg for others
       const weight = style.toLowerCase()
       if (weight === 'regular') {
         return `${baseUrl}/regular/${icon.fileName}.svg`
@@ -180,7 +173,6 @@ const sources = {
     colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Outline') {
-      // {base}/{name}.svg or {base}/{name}-fill.svg
       if (style === 'Fill') {
         return `${baseUrl}/${icon.fileName}-fill.svg`
       }
