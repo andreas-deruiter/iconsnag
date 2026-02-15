@@ -12,6 +12,7 @@
         v-for="icon in icons"
         :key="`${icon.source}-${icon.id}`"
         :icon="icon"
+        :color-type="colorType"
         @select="$emit('select', $event)"
       />
     </div>
@@ -32,6 +33,7 @@ const props = defineProps({
   hasMore: { type: Boolean, default: false },
   loading: { type: Boolean, default: false },
   query: { type: String, default: '' },
+  colorType: { type: String, default: '' },
 })
 const emit = defineEmits(['select', 'loadMore'])
 

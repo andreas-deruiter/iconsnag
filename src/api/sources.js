@@ -17,6 +17,7 @@ const sources = {
     license: 'MIT',
     licenseUrl: 'https://github.com/microsoft/fluentui-emoji/blob/main/LICENSE',
     author: 'Microsoft',
+    colorType: 'color',
 
     getFileUrl(baseUrl, icon, style = 'Color', skinTone = 'Default') {
       const styleLower = style.toLowerCase().replace(/\s+/g, '_')
@@ -52,6 +53,7 @@ const sources = {
     license: 'Apache 2.0',
     licenseUrl: 'https://github.com/google/material-design-icons/blob/master/LICENSE',
     author: 'Google',
+    colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Outlined') {
       // {base}/{name}/{variant}/{name}_24px.svg
@@ -71,6 +73,7 @@ const sources = {
     license: 'Apache 2.0',
     licenseUrl: 'https://github.com/googlefonts/noto-emoji/blob/main/LICENSE',
     author: 'Google',
+    colorType: 'color',
 
     getFileUrl(baseUrl, icon) {
       // {base}/{fileName}  (fileName already includes the full path like emoji_u1f600.svg)
@@ -89,6 +92,7 @@ const sources = {
     license: 'MIT',
     licenseUrl: 'https://github.com/tabler/tabler-icons/blob/main/LICENSE',
     author: 'Tabler',
+    colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Outline') {
       // {base}/{style}/{name}.svg
@@ -108,6 +112,7 @@ const sources = {
     license: 'MIT',
     licenseUrl: 'https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE',
     author: 'Microsoft',
+    colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Regular') {
       // {base}/{Folder Name}/SVG/ic_fluent_{snake}_{size}_{style}.svg
@@ -129,6 +134,7 @@ const sources = {
     license: 'ISC',
     licenseUrl: 'https://github.com/lucide-icons/lucide/blob/main/LICENSE',
     author: 'Lucide',
+    colorType: 'mono',
 
     getFileUrl(baseUrl, icon) {
       // {base}/{name}.svg
@@ -147,6 +153,7 @@ const sources = {
     license: 'MIT',
     licenseUrl: 'https://github.com/phosphor-icons/core/blob/main/LICENSE',
     author: 'Phosphor',
+    colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Regular') {
       // {base}/{weight}/{name}.svg for regular
@@ -170,6 +177,7 @@ const sources = {
     license: 'MIT',
     licenseUrl: 'https://github.com/twbs/icons/blob/main/LICENSE',
     author: 'Bootstrap',
+    colorType: 'mono',
 
     getFileUrl(baseUrl, icon, style = 'Outline') {
       // {base}/{name}.svg or {base}/{name}-fill.svg
@@ -191,6 +199,10 @@ export function getSource(sourceId) {
 
 export function getAllSources() {
   return sources
+}
+
+export function getSourceColorType(sourceId) {
+  return sources[sourceId]?.colorType || 'mono'
 }
 
 export function getSourceList() {

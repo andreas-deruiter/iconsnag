@@ -59,8 +59,44 @@
         <div class="mb-4">
           <SearchBar v-model="query" :total="total" />
         </div>
-        <div class="mb-6">
+        <div class="mb-4">
           <SourceFilter v-model="selectedSource" />
+        </div>
+
+        <!-- Color type filter -->
+        <div class="mb-6 flex items-center justify-center">
+          <div class="inline-flex rounded-full bg-gray-100 p-1">
+            <button
+              v-for="opt in colorTypeOptions"
+              :key="opt.value"
+              @click="selectedColorType = opt.value"
+              :title="opt.title"
+              :class="[
+                'flex h-8 w-8 items-center justify-center rounded-full transition-all',
+                selectedColorType === opt.value
+                  ? 'bg-white shadow-sm'
+                  : 'text-gray-400 hover:text-gray-600'
+              ]"
+            >
+              <!-- All: two overlapping circles -->
+              <svg v-if="opt.value === ''" class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="none">
+                <circle cx="8" cy="10" r="6" fill="#6366f1" opacity="0.7" />
+                <circle cx="12" cy="10" r="6" fill="currentColor" opacity="0.7" />
+              </svg>
+              <!-- Color: palette -->
+              <svg v-else-if="opt.value === 'color'" class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="8" fill="#6366f1" opacity="0.15" />
+                <circle cx="7" cy="8" r="2" fill="#ef4444" />
+                <circle cx="13" cy="8" r="2" fill="#3b82f6" />
+                <circle cx="10" cy="13" r="2" fill="#22c55e" />
+              </svg>
+              <!-- Mono: contrast circle -->
+              <svg v-else class="h-4.5 w-4.5" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5" />
+                <path d="M10 2a8 8 0 0 1 0 16z" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Mobile tag selector -->
@@ -94,6 +130,7 @@
               :has-more="hasMore"
               :loading="indexLoading"
               :query="query"
+              :color-type="selectedColorType"
               @select="openPreview"
               @load-more="loadMore"
             />
@@ -124,10 +161,15 @@ import IconPreview from './components/IconPreview.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 
 const { total, loading: indexLoading, error: indexError, loadIndex } = useIconIndex()
-const { query, selectedTag, selectedSource, sourceFilteredIcons, pagedIcons, totalResults, hasMore, loadMore } = useSearch()
+const { query, selectedTag, selectedSource, selectedColorType, sourceFilteredIcons, pagedIcons, totalResults, hasMore, loadMore } = useSearch()
 
 const tagList = TAG_LIST
 const selectedIcon = ref(null)
+const colorTypeOptions = [
+  { value: '', title: 'All icons' },
+  { value: 'color', title: 'Color only' },
+  { value: 'mono', title: 'Monochrome only' },
+]
 
 function openPreview(icon) {
   selectedIcon.value = icon

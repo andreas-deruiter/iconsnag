@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { useIconIndex } from './useIconIndex.js'
+import { getSourceColorType } from '../api/sources.js'
 
 export function useSearch() {
   const { icons } = useIconIndex()
@@ -7,6 +8,7 @@ export function useSearch() {
   const query = ref('')
   const selectedTag = ref('')
   const selectedSource = ref('')
+  const selectedColorType = ref('')
   const page = ref(1)
   const pageSize = 80
 
@@ -37,10 +39,24 @@ export function useSearch() {
     return score
   }
 
-  // Icons filtered by source only (used by TagsSidebar for counts)
+  // Icons filtered by source and color type (used by TagsSidebar for counts)
   const sourceFilteredIcons = computed(() => {
-    if (!selectedSource.value) return icons.value
-    return icons.value.filter(icon => icon.source === selectedSource.value)
+    let result = icons.value
+
+    if (selectedSource.value) {
+      result = result.filter(icon => icon.source === selectedSource.value)
+    }
+
+    if (selectedColorType.value === 'mono') {
+      result = result.filter(icon =>
+        getSourceColorType(icon.source) === 'mono' ||
+        icon.styles?.includes('High Contrast')
+      )
+    } else if (selectedColorType.value === 'color') {
+      result = result.filter(icon => getSourceColorType(icon.source) === 'color')
+    }
+
+    return result
   })
 
   const filteredIcons = computed(() => {
@@ -80,7 +96,7 @@ export function useSearch() {
   }
 
   // Reset page when any filter changes
-  watch([query, selectedSource, selectedTag], () => {
+  watch([query, selectedSource, selectedTag, selectedColorType], () => {
     page.value = 1
   })
 
@@ -88,6 +104,7 @@ export function useSearch() {
     query,
     selectedTag,
     selectedSource,
+    selectedColorType,
     sourceFilteredIcons,
     filteredIcons,
     pagedIcons,

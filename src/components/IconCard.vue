@@ -18,15 +18,22 @@
 <script setup>
 import { computed } from 'vue'
 import { useDownload } from '../composables/useDownload.js'
+import { getSourceColorType } from '../api/sources.js'
 
 const props = defineProps({
   icon: { type: Object, required: true },
+  colorType: { type: String, default: '' },
 })
 defineEmits(['select'])
 
 const { getPreviewUrl } = useDownload()
 
-const defaultStyle = computed(() => props.icon.styles?.[0] || 'Color')
+const defaultStyle = computed(() => {
+  if (props.colorType === 'mono' && getSourceColorType(props.icon.source) === 'color' && props.icon.styles?.includes('High Contrast')) {
+    return 'High Contrast'
+  }
+  return props.icon.styles?.[0] || 'Color'
+})
 
 const previewUrl = computed(() =>
   getPreviewUrl(props.icon, defaultStyle.value, 'Default')
