@@ -3,10 +3,10 @@
 /**
  * Builds the search index for the Fluent UI Emoji collection.
  *
- * Fetches the directory listing from the GitHub API, then fetches
- * each emoji's metadata.json to build a searchable index file.
+ * Fetches the full file tree and metadata from the GitHub API to build
+ * a searchable index with verified filenames.
  *
- * Output: public/data/fluent-emoji-index.json
+ * Output: data/fluent-emoji-index.json
  */
 
 import fs from 'fs'
@@ -19,7 +19,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const REPO = 'microsoft/fluentui-emoji'
 const BRANCH = 'main'
 const ASSETS_PATH = 'assets'
-const OUTPUT = path.join(__dirname, '..', 'public', 'data', 'fluent-emoji-index.json')
+const OUTPUT = path.join(__dirname, '..', 'data', 'fluent-emoji-index.json')
 
 // GitHub API base
 const API = 'https://api.github.com'
@@ -43,23 +43,49 @@ async function fetchJSON(url) {
   return res.json()
 }
 
-async function getEmojiDirectories() {
-  // Use the Git Trees API to get all top-level directories in assets/
-  // This is much faster than paginating through the Contents API
-  const treeUrl = `${API}/repos/${REPO}/git/trees/${BRANCH}?recursive=false`
-  const rootTree = await fetchJSON(treeUrl)
-
-  // Find the assets directory SHA
+async function getAssetsTree() {
+  // Get root tree to find assets SHA
+  const rootTree = await fetchJSON(`${API}/repos/${REPO}/git/trees/${BRANCH}?recursive=false`)
   const assetsEntry = rootTree.tree.find(e => e.path === ASSETS_PATH && e.type === 'tree')
   if (!assetsEntry) {
     throw new Error('Could not find assets directory in repo')
   }
 
-  // Get the assets subtree
-  const assetsTree = await fetchJSON(assetsEntry.url)
+  // Get full recursive tree of assets/
+  const assetsTree = await fetchJSON(`${assetsEntry.url}?recursive=true`)
   return assetsTree.tree
-    .filter(e => e.type === 'tree')
-    .map(e => e.path)
+}
+
+function extractFileNames(tree) {
+  // Build a map: folderName -> base fileName (from the Color SVG)
+  // Pattern: {folder}/Color/{fileName}_color.svg
+  // For skin-tone emoji: {folder}/Default/Color/{fileName}_color_default.svg
+  const fileNameMap = {}
+
+  for (const entry of tree) {
+    if (entry.type !== 'blob') continue
+
+    // Match: {folder}/Color/{something}_color.svg
+    const colorMatch = entry.path.match(/^([^/]+)\/Color\/(.+)_color\.svg$/)
+    if (colorMatch) {
+      const folder = colorMatch[1]
+      if (!fileNameMap[folder]) {
+        fileNameMap[folder] = colorMatch[2]
+      }
+      continue
+    }
+
+    // Match: {folder}/Default/Color/{something}_color_default.svg
+    const defaultMatch = entry.path.match(/^([^/]+)\/Default\/Color\/(.+)_color_default\.svg$/)
+    if (defaultMatch) {
+      const folder = defaultMatch[1]
+      if (!fileNameMap[folder]) {
+        fileNameMap[folder] = defaultMatch[2]
+      }
+    }
+  }
+
+  return fileNameMap
 }
 
 async function fetchMetadata(emojiName) {
@@ -76,13 +102,8 @@ function toId(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
 
-function toFileName(name) {
-  return name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_!]/g, '')
-}
-
 // Determine available styles and skin tones from metadata
 function getAvailableStyles(metadata) {
-  // All emojis have these styles in the assets branch
   const styles = ['3D', 'Color', 'Flat', 'High Contrast']
   return styles
 }
@@ -94,13 +115,21 @@ function hasSkinTones(metadata) {
 async function main() {
   console.log('Building Fluent UI Emoji search index...\n')
 
-  console.log('Fetching emoji directory listing...')
-  const emojiDirs = await getEmojiDirectories()
+  console.log('Fetching full assets file tree...')
+  const tree = await getAssetsTree()
+  console.log(`Got ${tree.length} entries in the tree.`)
+
+  // Extract actual filenames from the tree
+  const fileNameMap = extractFileNames(tree)
+
+  // Get emoji directory names
+  const emojiDirs = [...new Set(tree.filter(e => e.type === 'tree' && !e.path.includes('/')).map(e => e.path))]
   console.log(`Found ${emojiDirs.length} emoji directories.\n`)
 
   console.log('Fetching metadata for each emoji...')
   const BATCH_SIZE = 50
   const icons = []
+  let missingFileNames = 0
 
   for (let i = 0; i < emojiDirs.length; i += BATCH_SIZE) {
     const batch = emojiDirs.slice(i, i + BATCH_SIZE)
@@ -111,7 +140,13 @@ async function main() {
       if (!metadata) continue
 
       const name = batch[j]
-      const fileName = toFileName(name)
+      const fileName = fileNameMap[name]
+
+      if (!fileName) {
+        console.warn(`  No fileName found for "${name}", skipping`)
+        missingFileNames++
+        continue
+      }
 
       const iconEntry = {
         id: toId(name),
@@ -131,6 +166,10 @@ async function main() {
 
     const progress = Math.min(i + BATCH_SIZE, emojiDirs.length)
     console.log(`  ${progress}/${emojiDirs.length} processed`)
+  }
+
+  if (missingFileNames > 0) {
+    console.warn(`\nWarning: ${missingFileNames} emoji had no detectable filename`)
   }
 
   // Sort alphabetically

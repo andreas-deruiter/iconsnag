@@ -1,4 +1,6 @@
+.vscode/**
 src/**
+../**
 webview-ui/src/**
 webview-ui/node_modules/**
 webview-ui/vite.config.js
@@ -9,3 +11,4 @@ node_modules/**
 esbuild.js
 tsconfig.json
 .gitignore
+**/*.map

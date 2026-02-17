@@ -5,6 +5,10 @@
   "version": "0.1.0",
   "publisher": "iconsnag",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andreas-deruiter/iconsnag"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
