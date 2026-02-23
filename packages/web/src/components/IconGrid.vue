@@ -1,7 +1,7 @@
 <template>
   <div>
     <p v-if="totalResults > 0" class="mb-4 text-sm text-gray-500">
-      Showing {{ icons.length }} of {{ totalResults }} results
+      {{ totalResults.toLocaleString() }} results
     </p>
     <p v-else-if="!loading && query" class="py-12 text-center text-gray-400">
       No icons found for "{{ query }}"
@@ -18,7 +18,7 @@
     </div>
 
     <div v-if="hasMore" ref="sentinel" class="mt-6 flex justify-center py-4">
-      <span class="text-sm text-gray-400">Loading more...</span>
+      <button @click="emit('loadMore')" class="text-sm text-indigo-500 hover:text-indigo-600">Show more</button>
     </div>
   </div>
 </template>
