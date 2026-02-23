@@ -5,7 +5,8 @@
   "workspaces": [
     "packages/shared",
     "packages/web",
-    "packages/vscode"
+    "packages/vscode",
+    "packages/mcp"
   ],
   "scripts": {
     "dev": "npm run dev -w packages/web",

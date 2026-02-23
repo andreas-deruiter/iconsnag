@@ -1,0 +1,25 @@
+{
+  "name": "@iconsnag/mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "MCP server for searching and retrieving icons from 9 open-source collections",
+  "bin": {
+    "iconsnag-mcp": "./src/index.js"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@iconsnag/shared": "*",
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^3.24.0"
+  },
+  "keywords": [
+    "mcp",
+    "icons",
+    "emoji",
+    "model-context-protocol"
+  ],
+  "license": "MIT"
+}
