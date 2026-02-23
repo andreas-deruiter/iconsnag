@@ -9,6 +9,7 @@
  * Tools:
  *   - search_icons: Search across all icon collections
  *   - get_icon_svg: Get the SVG URL or content for a specific icon
+ *   - get_icon_png: Get a PNG version of a specific icon
  *   - list_sources: List all available icon sources
  *   - list_tags: List all icon category tags
  */
@@ -18,6 +19,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
+import sharp from 'sharp'
 import { z } from 'zod'
 import { scoreIcon } from '@iconsnag/shared/search'
 import { getSource, getSourceList } from '@iconsnag/shared/sources'
@@ -208,6 +210,93 @@ server.registerTool(
         type: 'text',
         text: lines.join('\n'),
       }],
+    }
+  },
+)
+
+// Tool: get_icon_png
+server.registerTool(
+  'get_icon_png',
+  {
+    description: 'Get a PNG version of a specific icon. Returns the image as a PNG file. Use search_icons first to find the icon ID and source.',
+    inputSchema: {
+      id: z.string().describe('Icon ID (e.g. "arrow-right", "heart", "sun")'),
+      source: z.string().describe('Source ID (e.g. "lucide", "phosphor", "material-symbols")'),
+      style: z.string().optional().describe('Style variant (e.g. "Outline", "Fill", "Regular", "Bold"). Defaults to the first available style.'),
+      size: z.number().min(16).max(1024).default(256).describe('PNG size in pixels (16-1024, default 256). The icon is rendered as a square.'),
+    },
+  },
+  async ({ id, source: srcId, style, size }) => {
+    const idx = indexes[srcId]
+    if (!idx) {
+      return {
+        content: [{
+          type: 'text',
+          text: `Unknown source "${srcId}". Use list_sources to see available sources.`,
+        }],
+      }
+    }
+
+    const srcConfig = getSource(srcId)
+    if (!srcConfig) {
+      return {
+        content: [{
+          type: 'text',
+          text: `Source "${srcId}" not configured.`,
+        }],
+      }
+    }
+
+    const icon = idx.icons.find(i => i.id === id)
+    if (!icon) {
+      return {
+        content: [{
+          type: 'text',
+          text: `Icon "${id}" not found in ${srcConfig.name}. Use search_icons to find available icons.`,
+        }],
+      }
+    }
+
+    const selectedStyle = style || icon.styles?.[0] || 'Default'
+    const fileUrl = srcConfig.getFileUrl(idx.baseUrl, icon, selectedStyle)
+
+    try {
+      const res = await fetch(fileUrl, { signal: AbortSignal.timeout(10000) })
+      if (!res.ok) {
+        return {
+          content: [{
+            type: 'text',
+            text: `Failed to fetch SVG: HTTP ${res.status}`,
+          }],
+        }
+      }
+
+      const svgBuffer = Buffer.from(await res.arrayBuffer())
+      const pngBuffer = await sharp(svgBuffer, { density: 300 })
+        .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png()
+        .toBuffer()
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `**${icon.name}** from ${srcConfig.name} (${size}x${size} PNG, style: ${selectedStyle})`,
+          },
+          {
+            type: 'image',
+            data: pngBuffer.toString('base64'),
+            mimeType: 'image/png',
+          },
+        ],
+      }
+    } catch (err) {
+      return {
+        content: [{
+          type: 'text',
+          text: `Failed to generate PNG: ${err.message || String(err)}`,
+        }],
+      }
     }
   },
 )
