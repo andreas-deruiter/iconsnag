@@ -157,6 +157,16 @@ const GROUP_TAG_MAP = {
   'Flags': ['Flags'],
   'Component': [],
 
+  // Payment Iconset
+  'Payment': ['Finance', 'Shopping'],
+
+  // OpenFinTech categories
+  'Payment Providers': ['Finance'],
+  'Payment Methods': ['Finance', 'Shopping'],
+  'Payout Methods': ['Finance'],
+  'Vendors': ['Finance'],
+  'Currencies': ['Finance'],
+
   // Tabler Icons categories
   'Arrows': ['Arrows'],
   'Animals': ['Animals'],

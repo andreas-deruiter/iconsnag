@@ -184,6 +184,44 @@ const sources = {
     },
   },
 
+  'payment-iconset': {
+    name: 'Payment Iconset',
+    indexUrl: '/data/payment-iconset-index.json',
+    repoUrl: 'https://github.com/kingjohnny/payment-iconset',
+    license: 'MIT',
+    licenseUrl: 'https://github.com/kingjohnny/payment-iconset/blob/master/LICENSE.md',
+    author: 'Johnny Berkmans',
+    colorType: 'color',
+
+    getFileUrl(baseUrl, icon) {
+      return `${baseUrl}/${icon.fileName}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
+  'openfintech': {
+    name: 'OpenFinTech',
+    indexUrl: '/data/openfintech-index.json',
+    repoUrl: 'https://github.com/openfintechio/openfintech',
+    license: 'MIT',
+    licenseUrl: 'https://github.com/openfintechio/openfintech/blob/master/LICENSE',
+    author: 'PayCore.io',
+    colorType: 'color',
+
+    getFileUrl(baseUrl, icon, style = 'Icon') {
+      const file = style === 'Logo' ? 'logo' : 'icon'
+      const encodedId = encodeURIComponent(icon.fileName)
+      return `${baseUrl}/${icon.category}/${encodedId}/${file}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
   'octicons': {
     name: 'GitHub Octicons',
     indexUrl: '/data/octicons-index.json',

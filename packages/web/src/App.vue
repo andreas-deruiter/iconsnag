@@ -13,6 +13,18 @@
             <p class="mt-1 text-xs text-gray-400">
               No sign-up. No ads. 100% free.
             </p>
+            <p class="mt-1.5 inline-flex items-center gap-1.5 text-xs text-gray-300">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456Z" /></svg>
+              <code class="rounded bg-gray-50 px-1.5 py-0.5 font-mono text-gray-400">claude mcp add iconsnag -- npx @iconsnag/mcp</code>
+              <button
+                @click="copyMcpCommand"
+                class="rounded p-0.5 text-gray-300 transition-colors hover:text-gray-500"
+                :title="copied ? 'Copied!' : 'Copy to clipboard'"
+              >
+                <svg v-if="!copied" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" /></svg>
+                <svg v-else class="h-3 w-3 text-green-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+              </button>
+            </p>
           </div>
           <div class="flex w-24 items-center justify-end gap-3 text-gray-400">
             <a
@@ -139,7 +151,6 @@
       </template>
     </main>
 
-
     <!-- Preview modal -->
     <IconPreview
       :icon="selectedIcon"
@@ -165,6 +176,7 @@ const { query, selectedTag, selectedSource, selectedColorType, sourceFilteredIco
 
 const tagList = TAG_LIST
 const selectedIcon = ref(null)
+const copied = ref(false)
 const colorTypeOptions = [
   { value: '', title: 'All icons' },
   { value: 'color', title: 'Color only' },
@@ -173,6 +185,12 @@ const colorTypeOptions = [
 
 function openPreview(icon) {
   selectedIcon.value = icon
+}
+
+function copyMcpCommand() {
+  navigator.clipboard.writeText('claude mcp add iconsnag -- npx @iconsnag/mcp')
+  copied.value = true
+  setTimeout(() => { copied.value = false }, 2000)
 }
 
 onMounted(() => {
