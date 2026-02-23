@@ -183,6 +183,28 @@ const sources = {
       return 'svg'
     },
   },
+
+  'octicons': {
+    name: 'GitHub Octicons',
+    indexUrl: '/data/octicons-index.json',
+    repoUrl: 'https://github.com/primer/octicons',
+    license: 'MIT',
+    licenseUrl: 'https://github.com/primer/octicons/blob/main/LICENSE',
+    author: 'GitHub',
+    colorType: 'mono',
+
+    getFileUrl(baseUrl, icon, style = 'Outline') {
+      const size = icon.preferredSize || 24
+      if (style === 'Fill') {
+        return `${baseUrl}/${icon.fileName}-fill-${size}.svg`
+      }
+      return `${baseUrl}/${icon.fileName}-${size}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
 }
 
 export function getSource(sourceId) {
