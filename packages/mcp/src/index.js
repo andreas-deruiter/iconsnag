@@ -4,7 +4,7 @@
  * IconSnag MCP Server
  *
  * Provides AI assistants with tools to search and retrieve icons
- * from 9 open-source collections (21,000+ icons).
+ * from 18 open-source collections (45,000+ icons).
  *
  * Tools:
  *   - search_icons: Search across all icon collections
@@ -24,7 +24,12 @@ import { getSource, getSourceList } from '@iconsnag/shared/sources'
 import { TAG_LIST } from '@iconsnag/shared/tags'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const DATA_DIR = path.join(__dirname, '..', '..', '..', 'data')
+
+// When installed via npx, data is bundled at ../data/ (relative to src/)
+// In local monorepo dev, data is at ../../../data/
+const BUNDLED_DATA = path.join(__dirname, '..', 'data')
+const MONOREPO_DATA = path.join(__dirname, '..', '..', '..', 'data')
+const DATA_DIR = fs.existsSync(BUNDLED_DATA) ? BUNDLED_DATA : MONOREPO_DATA
 
 // Load all icon indexes at startup
 function loadIndexes() {

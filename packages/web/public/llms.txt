@@ -41,10 +41,15 @@ To add it to Claude Code:
 claude mcp add iconsnag -- npx @iconsnag/mcp
 ```
 
-The MCP server provides tools to search icons by keyword, browse by collection, and get download URLs.
+Or install globally:
+```
+npm install -g @iconsnag/mcp
+```
+
+The MCP server provides tools to search icons by keyword, browse by collection, filter by tag, and get SVG URLs or content.
 
 ## Links
 
 - Website: https://iconsnag.com
 - GitHub: https://github.com/andreas-deruiter/iconsnag
-- MCP Package: @iconsnag/mcp on npm
+- npm: https://www.npmjs.com/package/@iconsnag/mcp

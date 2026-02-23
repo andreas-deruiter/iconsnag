@@ -28,3 +28,4 @@ out
 
 # VS Code extension
 *.vsix
+packages/mcp/data/

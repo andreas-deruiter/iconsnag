@@ -1,17 +1,22 @@
 {
   "name": "@iconsnag/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
-  "description": "MCP server for searching and retrieving icons from 9 open-source collections",
+  "description": "MCP server for searching and retrieving 45,000+ icons from 18 open-source collections",
   "bin": {
-    "iconsnag-mcp": "./src/index.js"
+    "iconsnag-mcp": "src/index.js"
   },
   "main": "src/index.js",
+  "files": [
+    "src/",
+    "data/"
+  ],
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "prepublishOnly": "rm -rf data && mkdir -p data && cp ../../data/*-index.json data/"
   },
   "dependencies": {
-    "@iconsnag/shared": "*",
+    "@iconsnag/shared": "0.1.0",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "zod": "^3.24.0"
   },
@@ -19,7 +24,9 @@
     "mcp",
     "icons",
     "emoji",
-    "model-context-protocol"
+    "model-context-protocol",
+    "claude",
+    "ai"
   ],
   "license": "MIT"
 }

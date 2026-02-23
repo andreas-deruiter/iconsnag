@@ -8,5 +8,8 @@
     "./sources": "./sources.js",
     "./search": "./search.js",
     "./tags": "./tags.js"
-  }
+  },
+  "description": "Shared utilities for IconSnag (source registry, search scoring, tags)",
+  "license": "MIT",
+  "keywords": ["icons", "emoji", "search"]
 }

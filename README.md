@@ -40,11 +40,21 @@ Free icon and emoji search engine. Find and download 45,000+ icons instantly as 
 
 ## MCP Server
 
+[![npm](https://img.shields.io/npm/v/@iconsnag/mcp)](https://www.npmjs.com/package/@iconsnag/mcp)
+
 Use IconSnag with AI coding assistants via the MCP server:
 
 ```bash
 claude mcp add iconsnag -- npx @iconsnag/mcp
 ```
+
+Or install globally:
+
+```bash
+npm install -g @iconsnag/mcp
+```
+
+The MCP server provides tools to search 45,000+ icons by keyword, browse collections, filter by tag, and get SVG URLs or content.
 
 ## Tech Stack
 
