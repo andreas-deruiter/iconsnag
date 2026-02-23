@@ -222,6 +222,136 @@ const sources = {
     },
   },
 
+  'simple-icons': {
+    name: 'Simple Icons',
+    indexUrl: '/data/simple-icons-index.json',
+    repoUrl: 'https://github.com/simple-icons/simple-icons',
+    license: 'CC0-1.0',
+    licenseUrl: 'https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md',
+    author: 'Simple Icons',
+    colorType: 'mono',
+
+    getFileUrl(baseUrl, icon) {
+      return `${baseUrl}/${icon.fileName}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
+  'devicon': {
+    name: 'Devicon',
+    indexUrl: '/data/devicon-index.json',
+    repoUrl: 'https://github.com/devicons/devicon',
+    license: 'MIT',
+    licenseUrl: 'https://github.com/devicons/devicon/blob/master/LICENSE',
+    author: 'Devicon',
+    colorType: 'color',
+
+    getFileUrl(baseUrl, icon, style = 'Original') {
+      const styleLower = style.toLowerCase().replace(/\s+/g, '-')
+      return `${baseUrl}/${icon.fileName}/${icon.fileName}-${styleLower}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
+  'openmoji': {
+    name: 'OpenMoji',
+    indexUrl: '/data/openmoji-index.json',
+    repoUrl: 'https://github.com/hfg-gmuend/openmoji',
+    license: 'CC-BY-SA-4.0',
+    licenseUrl: 'https://github.com/hfg-gmuend/openmoji/blob/master/LICENSE.txt',
+    author: 'HfG Schwäbisch Gmünd',
+    colorType: 'color',
+
+    getFileUrl(baseUrl, icon, style = 'Color') {
+      const dir = style === 'Black' ? 'black' : 'color'
+      return `${baseUrl}/${dir}/svg/${icon.fileName}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
+  'twemoji': {
+    name: 'Twemoji',
+    indexUrl: '/data/twemoji-index.json',
+    repoUrl: 'https://github.com/jdecked/twemoji',
+    license: 'MIT',
+    licenseUrl: 'https://github.com/jdecked/twemoji/blob/main/LICENSE-GRAPHICS',
+    author: 'Twitter / jdecked',
+    colorType: 'color',
+
+    getFileUrl(baseUrl, icon) {
+      return `${baseUrl}/${icon.fileName}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
+  'remixicon': {
+    name: 'Remix Icon',
+    indexUrl: '/data/remixicon-index.json',
+    repoUrl: 'https://github.com/Remix-Design/RemixIcon',
+    license: 'Apache 2.0',
+    licenseUrl: 'https://github.com/Remix-Design/RemixIcon/blob/master/License',
+    author: 'Remix Design',
+    colorType: 'mono',
+
+    getFileUrl(baseUrl, icon, style = 'Line') {
+      const variant = style.toLowerCase()
+      const encodedCategory = encodeURIComponent(icon.category)
+      return `${baseUrl}/${encodedCategory}/${icon.fileName}-${variant}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
+  'mdi': {
+    name: 'Material Design Icons',
+    indexUrl: '/data/mdi-index.json',
+    repoUrl: 'https://github.com/Templarian/MaterialDesign',
+    license: 'Apache 2.0',
+    licenseUrl: 'https://github.com/Templarian/MaterialDesign/blob/master/LICENSE',
+    author: 'Pictogrammers',
+    colorType: 'mono',
+
+    getFileUrl(baseUrl, icon) {
+      return `${baseUrl}/${icon.fileName}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
+  'vscode-icons': {
+    name: 'VS Code Icons',
+    indexUrl: '/data/vscode-icons-index.json',
+    repoUrl: 'https://github.com/vscode-icons/vscode-icons',
+    license: 'MIT',
+    licenseUrl: 'https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE',
+    author: 'VS Code Icons',
+    colorType: 'color',
+
+    getFileUrl(baseUrl, icon) {
+      return `${baseUrl}/${icon.fileName}.svg`
+    },
+
+    getFileExtension() {
+      return 'svg'
+    },
+  },
+
   'octicons': {
     name: 'GitHub Octicons',
     indexUrl: '/data/octicons-index.json',

@@ -208,6 +208,20 @@ const GROUP_TAG_MAP = {
   'Version control': ['Technology'],
   'Weather': ['Weather'],
   'Zodiac': ['Symbols & Math'],
+
+  // RemixIcon categories
+  'Business': ['Work & Office'],
+  'Device': ['Technology'],
+  'Editor': ['Creative & Design'],
+  'Finance': ['Finance'],
+  'Logos': ['Social'],
+  'Others': [],
+  'User & Faces': ['People'],
+  'Game & Sports': ['Sports & Fitness'],
+
+  // VS Code Icons
+  'File Type': ['Technology', 'Files & Folders'],
+  'Folder Type': ['Technology', 'Files & Folders'],
 }
 
 // Escape special regex characters in a string
